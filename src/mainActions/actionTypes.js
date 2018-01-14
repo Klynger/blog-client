@@ -1,0 +1,1 @@
+export const RECIEVE_POSTS = 'RECIEVE_POSTS'

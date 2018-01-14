@@ -1,0 +1,25 @@
+.start-center-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.actions-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.start__btn-wrapper {
+    margin: 10px;
+}
+
+.start__auth-btn {
+    margin: 10px;
+}
+
+.logo {
+    font-size: 2.6em;
+}
