@@ -25,7 +25,7 @@ class Login extends Component {
     }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state = {}, ownProps = {}) {
     return {
         onToggle: ownProps.onToggle,
         isOpen: ownProps.isOpen

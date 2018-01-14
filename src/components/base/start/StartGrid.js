@@ -4,6 +4,7 @@ import { GridList, GridTile, RaisedButton } from 'material-ui'
 import { blueA700 } from 'material-ui/styles/colors'
 
 import Login from '../login/Login'
+import Signup from '../signup/Signup'
 
 const styles = {
     root: {
@@ -32,7 +33,8 @@ class StartGrid extends Component {
         super(props)
 
         this.state = {
-            loginOpen: false
+            loginOpen: false,
+            signupOpen: false
         }
     }
 
@@ -42,9 +44,17 @@ class StartGrid extends Component {
         }))
     }
 
+    handleCloseSignup = () => {
+        this.setState({ signupOpen: false })
+    }
+
+    handleOpenSignup = () => {
+        this.setState({ signupOpen: true })
+    }
+
     render() {
         const { posts } = this.props
-        const { loginOpen } = this.state
+        const { loginOpen, signupOpen } = this.state
 
         return (
             <div style={styles.root}>
@@ -78,6 +88,7 @@ class StartGrid extends Component {
                                                 labelStyle={styles.actionsLabel}
                                                 primary={true}
                                                 fullWidth={true}
+                                                onClick={this.handleOpenSignup}
                                             />
                                         </div>
                                         <div className="start__btn-wrapper" style={{ width: '50%' }}>
@@ -94,6 +105,10 @@ class StartGrid extends Component {
                             </GridTile>);
                     })}
                 </GridList>
+                <Signup
+                    onClose={this.handleCloseSignup}
+                    isOpen={signupOpen}
+                />
                 <Login onToggle={this.handleToggleDialogLogin} isOpen={loginOpen} />
             </div>
         );
