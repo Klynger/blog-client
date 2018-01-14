@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import { fetchDefaultPosts } from './StartActions'
 
+import StartGrid from './StartGrid'
+
 class Start extends Component {
 
     componentDidMount() {
@@ -10,9 +12,12 @@ class Start extends Component {
     }
 
     render() {
+        
+        const { posts } = this.props
+
         return (
             <div>
-                Start Works
+                <StartGrid posts={posts} />
             </div>
         )
     }
