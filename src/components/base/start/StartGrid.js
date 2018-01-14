@@ -38,10 +38,12 @@ class StartGrid extends Component {
         }
     }
 
-    handleToggleDialogLogin = () => {
-        this.setState(state => ({
-            loginOpen: !state.loginOpen
-        }))
+    handleCloseLogin = () => {
+        this.setState({ loginOpen: false })
+    }
+
+    handleOpenLogin = () => {
+        this.setState({ loginOpen: true })
     }
 
     handleCloseSignup = () => {
@@ -74,8 +76,8 @@ class StartGrid extends Component {
                                 subtitle={<span>{post.content}</span>}
                             >
                                 {post.photo && post.photo !== 'no_photo' ?
-                                    <img style={styles.img} src={post.photo} />
-                                    : <img style={styles.img} src="/assets/no-image.jpg" />}
+                                    <img style={styles.img} src={post.photo} alt={post.title} />
+                                    : <img style={styles.img} src="/assets/no-image.jpg" alt={post.title} />}
                             </GridTile>) : (<GridTile key={index} style={styles.gridCell}>
                                 <div className="start-center-container">
                                     <div className="logo-container">
@@ -97,7 +99,7 @@ class StartGrid extends Component {
                                                 labelStyle={styles.actionsLabel}
                                                 fullWidth={true}
                                                 secondary={true}
-                                                onClick={this.handleToggleDialogLogin}
+                                                onClick={this.handleOpenLogin}
                                             />
                                         </div>
                                     </div>
@@ -105,11 +107,8 @@ class StartGrid extends Component {
                             </GridTile>);
                     })}
                 </GridList>
-                <Signup
-                    onClose={this.handleCloseSignup}
-                    isOpen={signupOpen}
-                />
-                <Login onToggle={this.handleToggleDialogLogin} isOpen={loginOpen} />
+                <Signup onClose={this.handleCloseSignup} isOpen={signupOpen} />
+                <Login onClose={this.handleCloseLogin} isOpen={loginOpen} />
             </div>
         );
     }
