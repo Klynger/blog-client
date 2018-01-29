@@ -1,0 +1,27 @@
+$upload-icon-size: 40px;
+
+.dropzone-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 20px 0 20px;
+}
+
+.dropzone-wrapper {
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+
+    &:hover {
+
+        .upload-icon {
+            bottom: 0;
+        }
+    }
+}
+
+.upload-icon {
+    bottom: -25px;
+    position: absolute !important;
+    right: 0;
+    transition: bottom 0.1s ease-in;
+}
