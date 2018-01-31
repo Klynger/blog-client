@@ -7,6 +7,8 @@ import Yup from 'yup'
 import DropZone from 'react-dropzone'
 
 import ModalTitle from '../../shared/ModalTitle'
+import { mutationCreateUser } from './SignupQueryGenerator'
+import { request } from '../../../utils/HTTPClient'
 
 const styles = {
     container: {
@@ -28,37 +30,18 @@ class Signup extends Component {
         isOpen: PropTypes.bool.isRequired
     }
 
-    constructor(props) {
-        super(props)
+    handleDropImage = (files) => {
 
-        this.state = {
-            photo: null
-        }
-    }
-
-    handleDropImage = (e) => {
-        const { handleChange } = this.props
-
-        for (const file of e.target.files) {
+        for (const file of files) {
             const reader = new FileReader()
             reader.onload = () => {
                 const fileAsDataURLString = reader.result
-                this.setState({ photo: fileAsDataURLString })
+                this.props.setFieldValue('photo', fileAsDataURLString)
             }
             reader.onabort = () => console.log('file reading was aborted')
             reader.onerror = () => console.log('file reading has failed')
             reader.readAsDataURL(file);
         }
-    }
-
-    handleSubmitMiddleware = (e) => {
-        // const newValues = {
-        //     ...values,
-        //     photo: this.state.photo
-        // }
-
-        console.log('passed ', e)
-        this.props.handleSubmit(e)
     }
 
     render() {
@@ -68,7 +51,6 @@ class Signup extends Component {
             isSubmitting, handleSubmit
         } = this.props
 
-        const { photo } = this.state
         return (
             <Dialog
                 title={<ModalTitle title="Signup" />}
@@ -87,24 +69,13 @@ class Signup extends Component {
                         secondary
                         keyboardFocused={true}
                         disabled={isSubmitting}
-                        onClick={this.handleSubmitMiddleware}
+                        onClick={handleSubmit}
                     />
                 ]}
             >
-                <form >
+                <Form>
                     <div className="dropzone-container">
-                        <label className="dropzone-wrapper">
-                            <input
-                                name="photo"
-                                type="file"
-                                style={styles.fileInput}
-                                onChange={this.handleDropImage}
-                                // onChange={handleChange}
-                            />
-                            {photo ? <Avatar src={photo} size={150} /> : <Avatar src="/assets/no-image.jpg" size={150} />}
-                            <FontIcon className="material-icons upload-icon" color={blueA700}>file_upload</FontIcon>
-                        </label>
-                        {/* <DropZone
+                        <DropZone
                             className="dropzone-wrapper"
                             onDrop={this.handleDropImage}
                             multiple={false} accept="image/*"
@@ -112,7 +83,7 @@ class Signup extends Component {
                         >
                             {values.photo ? <Avatar src={values.photo} size={150} /> : <Avatar src="/assets/no-image.jpg" size={150} />}
                             <FontIcon className="material-icons upload-icon" color={blueA700}>file_upload</FontIcon>
-                        </DropZone> */}
+                        </DropZone>
                     </div>
                     <TextField
                         name="name"
@@ -142,7 +113,7 @@ class Signup extends Component {
                         onChange={handleChange}
                         fullWidth
                     />
-                </form>
+                </Form>
             </Dialog>
         )
     }
@@ -163,13 +134,39 @@ export default withFormik({
         password: Yup.string().min(4, 'Password must be 4 characters or longer').required('Password is requred')
     }),
     handleSubmit(values, formikBag) {
-        setTimeout(() => {
-            if (values.email === 'rafafhgkifh@gmail.com') {
-                formikBag.setErrors({ email: 'That email is already taken' })
-            }
 
+        request(mutationCreateUser(values)).then(response => {
+
+            if (response.data.createUser) {
+                formikBag.props.onClose(true, true)
+            } else {
+                if(response.errors.length > 0) {
+                    const errors = response.errors.map(error => JSON.parse(error.message))
+                    
+
+                    const errorsObj = errors.reduce((prev, curError, i, errorsArray) => {
+                        switch(curError.name) {
+                            case 'DuplicateEmail':
+                                return {
+                                    ...prev,
+                                    email: curError.message
+                                }
+                            default:
+                                return prev
+                        }
+                    }, {})
+
+                    formikBag.setErrors(errorsObj)
+                }
+                
+            }
             formikBag.setSubmitting(false)
-        }, 2000)
+        }).catch(error => {
+            console.log('error ', error)
+            formikBag.setSubmitting(false)
+            // formikBag.setErrors({ password:  })
+        })
+
         console.log(values)
         console.log('bag', formikBag)
     }

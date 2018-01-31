@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { GridList, GridTile, RaisedButton } from 'material-ui'
+import { GridList, GridTile, RaisedButton, Dialog, FlatButton } from 'material-ui'
 import { blueA700 } from 'material-ui/styles/colors'
 
 import Login from '../login/Login'
@@ -34,7 +34,8 @@ class StartGrid extends Component {
 
         this.state = {
             loginOpen: false,
-            signupOpen: false
+            signupOpen: false,
+            signupUserSuccessDialog: false
         }
     }
 
@@ -46,17 +47,27 @@ class StartGrid extends Component {
         this.setState({ loginOpen: true })
     }
 
-    handleCloseSignup = () => {
-        this.setState({ signupOpen: false })
+    handleCloseSignup = (dialogClosing, creationSuccess = false) => {
+        let newState
+        if(creationSuccess) {
+            newState = { signupOpen: false, signupUserSuccessDialog: true }
+        } else {
+            newState = { signupOpen: false }
+        }
+        this.setState(newState)
     }
 
     handleOpenSignup = () => {
         this.setState({ signupOpen: true })
     }
 
+    handleCloseConfirmationSignupDialog = () => {
+        this.setState({ signupUserSuccessDialog: false })
+    }
+
     render() {
         const { posts } = this.props
-        const { loginOpen, signupOpen } = this.state
+        const { loginOpen, signupOpen, signupUserSuccessDialog } = this.state
 
         return (
             <div style={styles.root}>
@@ -109,6 +120,21 @@ class StartGrid extends Component {
                 </GridList>
                 <Signup onClose={this.handleCloseSignup} isOpen={signupOpen} />
                 <Login onClose={this.handleCloseLogin} isOpen={loginOpen} />
+                <Dialog
+                title='fodaci'
+                open={signupUserSuccessDialog}
+                onRequestClose={this.handleCloseConfirmationSignupDialog}
+                actions={[
+                    <FlatButton
+                        label="OK"
+                        primary
+                        keyboardFocused={true}
+                        onClick={this.handleCloseConfirmationSignupDialog}
+                    />
+                ]}
+            >
+            Account Created
+            </Dialog>
             </div>
         );
     }
