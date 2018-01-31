@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { Dialog, FlatButton, TextField } from 'material-ui'
 import { withFormik, Form } from 'formik'
 import Yup from 'yup'
 
 import ModalTitle from '../../shared/ModalTitle'
+
+import { request } from '../../../utils/HTTPClient'
+import { mutationCreateToken } from '../../../mainQueryGenerators/AuthQueryGenerator';
+import { addToken } from '../../../mainActions/authActions'
 
 const styles = {
     container: {
@@ -73,7 +78,18 @@ class Login extends Component {
     }
 }
 
-export default withFormik({
+function mapStateToProps(state = {}, ownProps) {
+    return {
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        addToken: (token) => dispatch(addToken(token))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withFormik({
     mapPropsToValues({ email }) {
         return {
             email: email || '',
@@ -84,8 +100,33 @@ export default withFormik({
         email: Yup.string().email('Email not valid').required('Email is required'),
         password: Yup.string().min(4, 'Password must be 4 characters or longer').required('Password is requred')
     }),
-    handleSubmit(values, { setErrors, setSubmitting }) {
+    handleSubmit(values, { setErrors, setSubmitting, props }) {
+
+
+        request(mutationCreateToken(values.email, values.password))
+            .then(response => {
+                console.log('response ', response)
+
+                if(response.data.createToken) {
+                    props.addToken(response.data.createToken.token)
+                } else {
+                    const errors = response.errors.map(error => JSON.parse(error.message))
+
+                    const errorsObj = errors.reduce((prev, curError, i , errorsArray) => {
+                        switch(curError.name) {
+                            case 'WrongInput':
+                            return {
+                                ...prev,
+                                password: curError.message
+                            }
+                            default:
+                            return prev
+                        }
+                    }, {})
+
+                    setErrors(errorsObj)
+                }
+            })
         setSubmitting(false)
-        console.log(values)
     }
-})(Login)
+})(Login))

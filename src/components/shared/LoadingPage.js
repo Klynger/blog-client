@@ -10,7 +10,7 @@ const LoadingPage = ({ isLoading, error }) => {
     } else if (error) {
         return (
             <div>
-                Somethin wen wrong while trying to load the page =/
+                Something went wrong while trying to load the page =/
             </div>
         )
     } else {
