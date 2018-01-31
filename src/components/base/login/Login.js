@@ -112,7 +112,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withFormi
 
                     localStorage.setItem('token', response.data.createToken.token)
                     props.addToken(response.data.createToken.token)
-                    props.history.push('/home')
+                    props.history.push('/')
                 } else {
                     const errors = response.errors.map(error => JSON.parse(error.message))
 

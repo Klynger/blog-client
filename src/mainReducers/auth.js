@@ -1,4 +1,4 @@
-import { ADD_TOKEN } from '../mainActions/actionTypes'
+import { ADD_TOKEN, REMOVE_TOKEN } from '../mainActions/actionTypes'
 
 const DEFAULT_STATE = {
     token: null
@@ -11,6 +11,12 @@ export function auth(state = DEFAULT_STATE, action) {
             return {
                 ...state,
                 token: action.token
+            }
+
+        case REMOVE_TOKEN:
+            return {
+                ...state,
+                token: null
             }
         default:
             return state

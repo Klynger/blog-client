@@ -26,7 +26,7 @@ const StartRoute = ({component: Component, ...rest }) => (
             <Component {...props} />
         ) : (
             <Redirect to={{
-                pathname: '/home',
+                pathname: '/',
                 state: { from: props.location }
             }}
             />
@@ -37,8 +37,8 @@ const StartRoute = ({component: Component, ...rest }) => (
 
 export default () => (
     <Switch>
-        <StartRoute path="/" exact component={AsyncStart} />
-        <AuthRoute path="/home" exact component={AsyncHome} />
+        <StartRoute path="/start" exact component={AsyncStart} />
+        <AuthRoute path="/" exact component={AsyncHome} />
         <Route component={AsyncNotFound} />
     </Switch>
 )
