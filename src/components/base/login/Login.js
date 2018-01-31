@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Dialog, FlatButton, TextField } from 'material-ui'
 import { withFormik, Form } from 'formik'
@@ -89,7 +90,7 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withFormik({
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withFormik({
     mapPropsToValues({ email }) {
         return {
             email: email || '',
@@ -105,10 +106,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(withFormik({
 
         request(mutationCreateToken(values.email, values.password))
             .then(response => {
-                console.log('response ', response)
+                console.log('response ', props)
 
                 if(response.data.createToken) {
+
+                    localStorage.setItem('token', response.data.createToken.token)
                     props.addToken(response.data.createToken.token)
+                    props.history.push('/home')
                 } else {
                     const errors = response.errors.map(error => JSON.parse(error.message))
 
@@ -129,4 +133,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(withFormik({
             })
         setSubmitting(false)
     }
-})(Login))
+})(Login)))
