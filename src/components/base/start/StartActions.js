@@ -1,7 +1,7 @@
 import { request } from '../../../utils/HTTPClient'
 import { recievePosts } from '../../../mainActions/postsActions'
 
-import { queryDefaultPosts } from './StartQueryGenerator'
+import { queryRecievePosts } from '../../../mainQueryGenerators/PostQueryGenerator'
 
 export const RECIEVE_DEFAULT_POSTS = 'RECIEVE_DEFAULT_POSTS'
 
@@ -11,7 +11,7 @@ export const recieveDefaultPosts = posts => ({
 })
 
 export const fetchDefaultPosts = () => dispatch => (
-    request(queryDefaultPosts())
+    request(queryRecievePosts())
         .then(response => {
             dispatch(recievePosts(response.data.posts));
             dispatch(recieveDefaultPosts(response.data.posts));

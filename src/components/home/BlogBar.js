@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { AppBar, IconButton, Tabs, Tab, FlatButton } from 'material-ui'
+import { AppBar, IconButton, FlatButton } from 'material-ui'
 import ActionPolymer from 'material-ui/svg-icons/action/polymer'
 
-import { removeToken } from '../../../mainActions/authActions'
+import { removeToken } from '../../mainActions/authActions'
 
 class BlogBar extends Component {
 
